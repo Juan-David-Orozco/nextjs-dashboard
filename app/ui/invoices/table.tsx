@@ -3,6 +3,7 @@ import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
 import InvoiceStatus from '@/app/ui/invoices/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredInvoices } from '@/app/lib/data';
+import { ArchiveBoxIcon } from '@heroicons/react/24/outline';
 
 export default async function InvoicesTable({
   query,
@@ -13,10 +14,25 @@ export default async function InvoicesTable({
 }) {
   const invoices = await fetchFilteredInvoices(query, currentPage);
 
+  if(invoices.length === 0) {
+    return (
+      <>
+        <div className="mt-6 flex grow w-full items-center justify-around p-6 md:p-12">
+          <div>
+            <ArchiveBoxIcon className="h-20 w-20 text-gray-700" />
+          </div>
+          <p className="text-xl text-gray-700 md:text-2xl">
+            No se encontraron resultados para la busqueda: <b>{query}</b>
+          </p>
+        </div>
+      </>
+    )
+  }
+
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+        <div className="rounded-lg bg-gray-400 p-2 md:pt-0">
           <div className="md:hidden">
             {invoices?.map((invoice) => (
               <div
